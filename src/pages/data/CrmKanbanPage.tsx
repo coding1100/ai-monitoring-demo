@@ -58,6 +58,21 @@ export const CrmKanbanPage: React.FC = () => {
     }
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent, leadId: string, currentStage: CrmStage) => {
+    const currentIndex = stages.indexOf(currentStage);
+    if (e.key === 'ArrowRight' || e.key === 'Enter') {
+      e.preventDefault();
+      if (currentIndex < stages.length - 1) {
+        updateLeadStage(leadId, stages[currentIndex + 1]);
+      }
+    } else if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      if (currentIndex > 0) {
+        updateLeadStage(leadId, stages[currentIndex - 1]);
+      }
+    }
+  };
+
   const handleManualSync = async () => {
     setLastSyncTime(new Date().toISOString().replace('T', ' ').slice(0, 19));
   };
@@ -167,8 +182,12 @@ export const CrmKanbanPage: React.FC = () => {
                     <div
                       key={lead.id}
                       draggable
+                      tabIndex={0}
+                      role="button"
+                      aria-label={`${lead.fullName}, ${stage}. Press Right Arrow to advance, Left Arrow to regress.`}
                       onDragStart={() => handleDragStart(lead.id)}
-                      className="p-2.5 rounded-control bg-slate-50/70 dark:bg-slate-900/70 border border-slate-200/70 dark:border-slate-800/80 shadow-xs cursor-grab active:cursor-grabbing text-xs hover:border-accent transition-all space-y-1 select-none"
+                      onKeyDown={(e) => handleKeyDown(e, lead.id, stage)}
+                      className="p-2.5 rounded-control bg-slate-50/70 dark:bg-slate-900/70 border border-slate-200/70 dark:border-slate-800/80 shadow-xs cursor-grab active:cursor-grabbing text-xs hover:border-accent focus-visible:ring-2 focus-visible:ring-accent transition-all space-y-1 select-none"
                     >
                       <div className="font-semibold text-slate-900 dark:text-slate-100 truncate">
                         {lead.fullName}
@@ -217,6 +236,7 @@ export const CrmKanbanPage: React.FC = () => {
                   type="checkbox"
                   checked={task.completed}
                   readOnly
+                  aria-label={`Task: ${task.title}`}
                   className="rounded text-accent focus:ring-accent"
                 />
                 <div className={task.completed ? 'line-through text-slate-400' : ''}>
