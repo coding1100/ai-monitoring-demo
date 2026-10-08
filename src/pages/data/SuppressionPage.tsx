@@ -105,12 +105,25 @@ export const SuppressionPage: React.FC = () => {
           Verify whether an email, phone number, or corporate domain is blocked before launching a batch.
         </p>
 
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 pt-1">
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleCheckAddress();
+          }}
+          className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 pt-1"
+        >
           <input
             type="text"
             placeholder="e.g. g.sinclair@auracosmetic.com or competitoraesthetics.com..."
             value={checkQuery}
             onChange={(e) => setCheckQuery(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                handleCheckAddress();
+              }
+            }}
+            aria-label="Address or domain to check for suppression"
             className="flex-1 px-3 py-2 text-xs font-mono rounded-control bg-slate-100/70 dark:bg-slate-900/60 border border-slate-300/60 dark:border-slate-800 text-slate-900 dark:text-slate-100"
           />
           <ActionButton
@@ -121,7 +134,7 @@ export const SuppressionPage: React.FC = () => {
             <Search className="w-3.5 h-3.5" />
             <span>Check Address</span>
           </ActionButton>
-        </div>
+        </form>
 
         {checkResult && (
           <div
