@@ -47,10 +47,12 @@ Audited against production build (`http://localhost:4173`):
 
 | Page | URL | Performance (Req >= 80) | Accessibility (Req >= 90) | Best Practices | SEO | Status |
 |:---|:---|:---:|:---:|:---:|:---:|:---:|
-| **Home (System Map)** | `/` | **94** | **100** | 100 | 100 | **PASS** |
-| **Output / Dashboard** | `/output/dashboard` | **80** | **96** | 100 | 100 | **PASS** |
-| **Data / Leads** | `/data/leads` | **84** | **100** | 100 | 100 | **PASS** |
-| **Orchestration / Runs** | `/orchestration/runs` | **83** | **100** | 100 | 100 | **PASS** |
+| **Home (System Map)** | `/` | **90** | **100** | 100 | 100 | **PASS** |
+| **Output / Dashboard** | `/output/dashboard` | **99** | **100** | 100 | 100 | **PASS** |
+| **Data / Leads** | `/data/leads` | **99** | **100** | 100 | 100 | **PASS** |
+| **Orchestration / Runs** | `/orchestration/runs` | **99** | **100** | 100 | 100 | **PASS** |
+| **Agency Overview** | `/agency/overview` | **99** | **100** | 100 | 100 | **PASS** |
+| **Client Home** | `/client/home` | **99** | **100** | 100 | 100 | **PASS** |
 
 ---
 

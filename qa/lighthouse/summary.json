@@ -2,28 +2,42 @@
   {
     "page": "home",
     "url": "http://localhost:4173/",
-    "performance": 94,
+    "performance": 90,
     "accessibility": 100,
     "passed": true
   },
   {
     "page": "dashboard",
     "url": "http://localhost:4173/output/dashboard",
-    "performance": 80,
-    "accessibility": 96,
+    "performance": 99,
+    "accessibility": 100,
     "passed": true
   },
   {
     "page": "leads",
     "url": "http://localhost:4173/data/leads",
-    "performance": 84,
+    "performance": 99,
     "accessibility": 100,
     "passed": true
   },
   {
     "page": "runs",
     "url": "http://localhost:4173/orchestration/runs",
-    "performance": 83,
+    "performance": 99,
+    "accessibility": 100,
+    "passed": true
+  },
+  {
+    "page": "agency_overview",
+    "url": "http://localhost:4173/agency/overview",
+    "performance": 99,
+    "accessibility": 100,
+    "passed": true
+  },
+  {
+    "page": "client_home",
+    "url": "http://localhost:4173/client/home",
+    "performance": 99,
     "accessibility": 100,
     "passed": true
   }

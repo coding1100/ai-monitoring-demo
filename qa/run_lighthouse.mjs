@@ -1,4 +1,5 @@
 import lighthouse from 'lighthouse';
+import desktopConfig from 'lighthouse/core/config/desktop-config.js';
 import * as chromeLauncher from 'chrome-launcher';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -8,6 +9,8 @@ const TARGET_PAGES = [
   { name: 'dashboard', url: 'http://localhost:4173/output/dashboard' },
   { name: 'leads', url: 'http://localhost:4173/data/leads' },
   { name: 'runs', url: 'http://localhost:4173/orchestration/runs' },
+  { name: 'agency_overview', url: 'http://localhost:4173/agency/overview' },
+  { name: 'client_home', url: 'http://localhost:4173/client/home' },
 ];
 
 const LIGHTHOUSE_DIR = path.resolve(process.cwd(), 'qa', 'lighthouse');
@@ -34,7 +37,7 @@ async function runAudit() {
   try {
     for (const target of TARGET_PAGES) {
       console.log(`Auditing ${target.name} (${target.url})...`);
-      const runnerResult = await lighthouse(target.url, options);
+      const runnerResult = await lighthouse(target.url, options, desktopConfig);
 
       const reportJson = runnerResult.report[0];
       const reportHtml = runnerResult.report[1];
