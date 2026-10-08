@@ -79,13 +79,22 @@ export const generateWorkspaceLeads = (workspaceId: WorkspaceId): Lead[] => {
   const firstNames = ['Marcus', 'Elena', 'Julian', 'Sophia', 'David', 'Chloe', 'Arthur', 'Hannah', 'Gideon', 'Sienna', 'Trevor', 'Nora', 'Vance', 'Lila', 'Dominic', 'Claire', 'Wyatt', 'Camilla', 'Derek', 'Tessa'];
   const lastNames = ['Vance', 'Mercer', 'Castillo', 'Lindqvist', 'Sterling', 'Chen', 'Bauer', 'Novak', 'Gallagher', 'Reyes', 'Holden', 'Sinclair', 'Davenport', 'Kovacs', 'Patel', 'Fischer', 'Watanabe', 'O\'Connor', 'Holt', 'Bishop'];
 
-  const workspaceProfiles = {
+  interface WorkspaceProfile {
+    count: number;
+    titles: string[];
+    companies: string[];
+    locations: string[];
+    primarySource: Lead['source'];
+    tagPool: string[];
+  }
+
+  const workspaceProfiles: Record<string, WorkspaceProfile> = {
     halden: {
       count: 124,
       titles: ['Clinic Owner', 'Medical Director', 'Managing Partner', 'Lead Dermatologist', 'Practice Administrator'],
       companies: ['Radiance Skin Institute', 'Manhattan Derma Lounge', 'Tribeca Med Spa', 'Park Ave Aesthetics', 'Gotham Laser Center', 'Empire Wellness Group', 'Aura Cosmetic Care', 'SoHo Skin Lab', 'Hudson Valley Laser', 'Verve Medical Spa'],
       locations: ['New York, NY', 'Brooklyn, NY', 'White Plains, NY', 'Garden City, NY', 'Jersey City, NJ'],
-      primarySource: 'apollo_b2b' as const,
+      primarySource: 'apollo_b2b',
       tagPool: ['medspa_owner', 'laser_qualified', 'nyc_metro', 'q1_target', 'high_ticket'],
     },
     lakeview: {
@@ -93,7 +102,7 @@ export const generateWorkspaceLeads = (workspaceId: WorkspaceId): Lead[] => {
       titles: ['Patient', 'Prospective Patient', 'Family Contact', 'Inquirer', 'Member'],
       companies: ['Self (Consumer)', 'Household Lead', 'Individual Inquirer', 'Family Dental Account'],
       locations: ['Chicago, IL', 'Naperville, IL', 'Evanston, IL', 'Schaumburg, IL', 'Oak Park, IL'],
-      primarySource: 'web_form' as const,
+      primarySource: 'web_form',
       tagPool: ['invisalign_inquiry', 'emergency_dental', 'family_cleaning', 'insurance_verified', 'sms_optin'],
     },
     ridgeway: {
@@ -101,12 +110,12 @@ export const generateWorkspaceLeads = (workspaceId: WorkspaceId): Lead[] => {
       titles: ['Facility Manager', 'Property Owner', 'Asset Director', 'General Contractor', 'HOA Board Member'],
       companies: ['Apex Industrial Park', 'Summit Commercial Properties', 'Front Range Logistics', 'Pike Peak Warehouse', 'Mile High Storage LLC', 'Continental Property Mgmt', 'Ironclad Industrial'],
       locations: ['Denver, CO', 'Aurora, CO', 'Lakewood, CO', 'Boulder, CO', 'Colorado Springs, CO'],
-      primarySource: 'meta_ad' as const,
+      primarySource: 'meta_ad',
       tagPool: ['commercial_flat_roof', 'hail_inspection', 'commercial_b2b', 'tpo_membrane', 'insurance_claim'],
     },
   };
 
-  const profile = workspaceProfiles[workspaceId];
+  const profile: WorkspaceProfile = workspaceProfiles[workspaceId] || workspaceProfiles.halden;
   const stages: CrmStage[] = ['Lead', 'Contacted', 'Engaged', 'Qualified', 'Appointment', 'Opportunity', 'Customer'];
   const leads: Lead[] = [];
 

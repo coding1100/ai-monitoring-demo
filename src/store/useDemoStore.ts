@@ -20,6 +20,21 @@ import {
   CrmTask,
   CrmStage,
   ConnectionConfig,
+  AppMode,
+  PlanTier,
+  WorkspaceStatus,
+  ClientWorkspace,
+  PlanDefinition,
+  PricingAssumptions,
+  AgencySubscription,
+  AgencyInvoice,
+  GhlSubAccount,
+  GhlError,
+  AgencyTeamMember,
+  SystemWorkflowHealth,
+  ClientReport,
+  WebsiteInboundForm,
+  IsolationAuditCheck,
 } from '../types';
 import {
   WORKSPACES,
@@ -40,14 +55,88 @@ import {
   INITIAL_TEAM_MEMBERS,
   INITIAL_CRM_TASKS,
 } from '../data/mockData';
+import {
+  DEFAULT_PLANS,
+  DEFAULT_PRICING_ASSUMPTIONS,
+  CLIENT_WORKSPACES,
+  INITIAL_AGENCY_SUBSCRIPTIONS,
+  INITIAL_AGENCY_INVOICES,
+  INITIAL_GHL_SUBACCOUNTS,
+  INITIAL_GHL_ERRORS,
+  INITIAL_AGENCY_TEAM,
+  INITIAL_SYSTEM_WORKFLOWS,
+  INITIAL_CLIENT_REPORTS,
+  INITIAL_WEBSITE_FORMS,
+  INITIAL_ISOLATION_CHECKS,
+} from '../data/agencyMockData';
+import { fakeDelay } from '../utils/seededRandom';
+
+export interface OnboardingState {
+  step: number;
+  account: {
+    fullName: string;
+    workEmail: string;
+    companyName: string;
+    industry: string;
+  };
+  plan: PlanTier;
+  billingCycle: 'monthly' | 'yearly';
+  payment: {
+    cardName: string;
+    cardNumber: string;
+    cardExp: string;
+    cardCvc: string;
+    country: string;
+    postalCode: string;
+  };
+  integrations: Record<string, boolean>;
+  crmChecklist: {
+    subAccountCreated: boolean;
+    pipelinesMapped: boolean;
+    contactsSynced: boolean;
+    webhooksBound: boolean;
+  };
+  campaignChecklist: {
+    personasDefined: boolean;
+    promptTemplateReviewed: boolean;
+    domainVerified: boolean;
+    velocityCapSet: boolean;
+    optOutGateEnabled: boolean;
+  };
+}
 
 interface DemoState {
+  // Top-Level SaaS Role & Tenant Scope
+  appMode: AppMode;
+  supportSessionWorkspace: string | null;
   currentWorkspaceId: WorkspaceId;
   currentRole: UserRole;
   showDataScope: boolean;
   darkMode: boolean;
 
-  // Data Collections
+  // Agency Layer State
+  clientWorkspaces: ClientWorkspace[];
+  planDefinitions: PlanDefinition[];
+  pricingAssumptions: PricingAssumptions;
+  agencySubscriptions: AgencySubscription[];
+  agencyInvoices: AgencyInvoice[];
+  ghlSubAccounts: GhlSubAccount[];
+  ghlErrors: GhlError[];
+  agencyTeam: AgencyTeamMember[];
+  systemWorkflows: SystemWorkflowHealth[];
+  isolationChecks: IsolationAuditCheck[];
+  isolationAuditRunning: boolean;
+  isolationAuditCompleted: boolean;
+
+  // Client Extended Screens State
+  clientReports: ClientReport[];
+  websiteForms: WebsiteInboundForm[];
+  websiteInboundLeadSuccess: boolean;
+
+  // Onboarding Wizard State
+  onboarding: OnboardingState;
+
+  // Core 5-Layer Data Collections
   leads: Lead[];
   plans: PlannedCampaign[];
   runs: WorkflowRun[];
@@ -70,12 +159,38 @@ interface DemoState {
   tourStepIndex: number;
   tourPaused: boolean;
 
-  // Actions
+  // App & Scope Actions
+  setAppMode: (mode: AppMode) => void;
+  startSupportSession: (workspaceId: string) => void;
+  endSupportSession: () => void;
   setWorkspace: (id: WorkspaceId) => void;
   setRole: (role: UserRole) => void;
   toggleDataScope: () => void;
   toggleDarkMode: () => void;
   resetDemo: () => void;
+
+  // Agency Actions
+  toggleWorkspaceStatus: (workspaceId: string, status: WorkspaceStatus) => void;
+  archiveWorkspace: (workspaceId: string) => void;
+  createClientWorkspace: (data: Partial<ClientWorkspace>) => void;
+  updatePricingAssumption: (key: keyof PricingAssumptions, val: number) => void;
+  updatePlanDefinition: (planName: PlanTier, updates: Partial<PlanDefinition>) => void;
+  retryFailedPayment: (subId: string) => Promise<boolean>;
+  runIsolationAudit: () => Promise<void>;
+
+  // Client Actions
+  submitWebsiteInquiry: (inquiry: { fullName: string; email: string; phone: string; company: string; message: string }) => Promise<void>;
+  updateClientWorkspacePlan: (workspaceId: string, plan: PlanTier) => void;
+
+  // Onboarding Wizard Actions
+  setOnboardingStep: (step: number) => void;
+  updateOnboardingAccount: (account: Partial<OnboardingState['account']>) => void;
+  setOnboardingPlan: (plan: PlanTier, billingCycle: 'monthly' | 'yearly') => void;
+  updateOnboardingPayment: (payment: Partial<OnboardingState['payment']>) => void;
+  toggleOnboardingIntegration: (key: string) => void;
+  tickOnboardingCrmCheck: (key: keyof OnboardingState['crmChecklist']) => void;
+  toggleOnboardingCampaignCheck: (key: keyof OnboardingState['campaignChecklist']) => void;
+  finishOnboarding: () => string; // returns created workspace id
 
   // Domain Actions
   addLead: (lead: Lead) => void;
@@ -107,6 +222,46 @@ interface DemoState {
   setTourStep: (index: number) => void;
 }
 
+const getInitialOnboarding = (): OnboardingState => ({
+  step: 1,
+  account: {
+    fullName: 'David Sterling',
+    workEmail: 'david@sterlingmed.com',
+    companyName: 'Sterling Aesthetics',
+    industry: 'Medical Aesthetics',
+  },
+  plan: 'Growth',
+  billingCycle: 'monthly',
+  payment: {
+    cardName: 'David Sterling',
+    cardNumber: '4242 •••• •••• 4242',
+    cardExp: '12/28',
+    cardCvc: '123',
+    country: 'United States',
+    postalCode: '10001',
+  },
+  integrations: {
+    email: true,
+    sms: true,
+    crm: true,
+    apollo: false,
+    meta: false,
+  },
+  crmChecklist: {
+    subAccountCreated: true,
+    pipelinesMapped: true,
+    contactsSynced: true,
+    webhooksBound: true,
+  },
+  campaignChecklist: {
+    personasDefined: true,
+    promptTemplateReviewed: true,
+    domainVerified: true,
+    velocityCapSet: true,
+    optOutGateEnabled: true,
+  },
+});
+
 const getInitialData = () => {
   const allLeads = [
     ...generateWorkspaceLeads('halden'),
@@ -115,10 +270,32 @@ const getInitialData = () => {
   ];
 
   return {
+    appMode: 'client' as AppMode,
+    supportSessionWorkspace: null,
     currentWorkspaceId: 'halden' as WorkspaceId,
     currentRole: 'admin' as UserRole,
     showDataScope: false,
     darkMode: false,
+
+    clientWorkspaces: CLIENT_WORKSPACES,
+    planDefinitions: DEFAULT_PLANS,
+    pricingAssumptions: DEFAULT_PRICING_ASSUMPTIONS,
+    agencySubscriptions: INITIAL_AGENCY_SUBSCRIPTIONS,
+    agencyInvoices: INITIAL_AGENCY_INVOICES,
+    ghlSubAccounts: INITIAL_GHL_SUBACCOUNTS,
+    ghlErrors: INITIAL_GHL_ERRORS,
+    agencyTeam: INITIAL_AGENCY_TEAM,
+    systemWorkflows: INITIAL_SYSTEM_WORKFLOWS,
+    isolationChecks: INITIAL_ISOLATION_CHECKS,
+    isolationAuditRunning: false,
+    isolationAuditCompleted: false,
+
+    clientReports: INITIAL_CLIENT_REPORTS,
+    websiteForms: INITIAL_WEBSITE_FORMS,
+    websiteInboundLeadSuccess: false,
+
+    onboarding: getInitialOnboarding(),
+
     leads: allLeads,
     plans: INITIAL_PLANS,
     runs: INITIAL_WORKFLOW_RUNS,
@@ -145,6 +322,25 @@ export const useDemoStore = create<DemoState>()(
   persist(
     (set, get) => ({
       ...getInitialData(),
+
+      setAppMode: (mode: AppMode) => {
+        set({ appMode: mode });
+      },
+
+      startSupportSession: (workspaceId: string) => {
+        set({
+          supportSessionWorkspace: workspaceId,
+          currentWorkspaceId: workspaceId,
+          appMode: 'client',
+        });
+      },
+
+      endSupportSession: () => {
+        set({
+          supportSessionWorkspace: null,
+          appMode: 'agency',
+        });
+      },
 
       setWorkspace: (id: WorkspaceId) => {
         set({ currentWorkspaceId: id });
@@ -177,67 +373,343 @@ export const useDemoStore = create<DemoState>()(
         document.documentElement.classList.remove('dark');
       },
 
-      addLead: (lead: Lead) => {
+      // Agency Actions
+      toggleWorkspaceStatus: (workspaceId: string, status: WorkspaceStatus) => {
         set((state) => ({
-          leads: [lead, ...state.leads],
-          systemLogs: [
-            {
-              id: `log_${Date.now()}`,
-              workspace_id: lead.workspace_id,
-              type: 'workflow',
-              timestamp: new Date().toISOString().replace('T', ' ').slice(0, 16),
-              actor: 'Data Pipeline',
-              action: 'New Lead Ingested',
-              details: `Added ${lead.fullName} (${lead.company}) via ${lead.source}`,
-              status: 'success',
-            },
-            ...state.systemLogs,
-          ],
+          clientWorkspaces: state.clientWorkspaces.map((w) =>
+            w.id === workspaceId ? { ...w, status } : w
+          ),
         }));
       },
 
-      updateLeadStage: (id: string, stage: CrmStage) => {
-        set((state) => {
-          const lead = state.leads.find((l) => l.id === id);
-          if (!lead) return state;
+      archiveWorkspace: (workspaceId: string) => {
+        set((state) => ({
+          clientWorkspaces: state.clientWorkspaces.map((w) =>
+            w.id === workspaceId ? { ...w, status: 'paused' as WorkspaceStatus } : w
+          ),
+        }));
+      },
 
-          const updatedTimeline = [
-            {
-              id: `tl_${Date.now()}`,
-              date: new Date().toISOString().replace('T', ' ').slice(0, 16),
-              type: 'stage_changed' as const,
-              title: `Stage moved to ${stage}`,
-              note: `Updated manually or via automation rule.`,
-            },
-            ...lead.timeline,
-          ];
+      createClientWorkspace: (data: Partial<ClientWorkspace>) => {
+        const id = data.id || `ws-${Date.now().toString(36)}`;
+        const newWs: ClientWorkspace = {
+          id,
+          name: data.name || 'New Client Workspace',
+          industry: data.industry || 'General Services',
+          type: data.type || 'B2B',
+          plan: data.plan || 'Growth',
+          status: 'active',
+          leadsThisMonth: 0,
+          emailsSent: 0,
+          smsSent: 0,
+          postsPublished: 0,
+          aiSpend: 0,
+          revenue: data.plan === 'Scale' ? 799 : data.plan === 'Starter' ? 149 : 349,
+          margin: 78.0,
+          crmStatus: 'connected',
+          lastActivity: 'Just now',
+          tokenCostPerLead: 0.026,
+          tokenCostPerCampaign: 4.0,
+          subAccountName: `${data.name || 'New'} GHL Account`,
+          contactsSynced: 0,
+          pipelinesMapped: 3,
+          dailySpendCap: 25,
+          modelSplit: { small: 75, large: 25 },
+          conversationsNeedingReply: 0,
+          ...data,
+        };
 
-          return {
-            leads: state.leads.map((l) =>
-              l.id === id
-                ? {
-                    ...l,
-                    stage,
-                    timeline: updatedTimeline,
-                    updatedAt: new Date().toISOString().replace('T', ' ').slice(0, 16),
-                  }
-                : l
-            ),
-            systemLogs: [
-              {
-                id: `log_${Date.now()}`,
-                workspace_id: lead.workspace_id,
-                type: 'workflow',
-                timestamp: new Date().toISOString().replace('T', ' ').slice(0, 16),
-                actor: 'CRM Manager',
-                action: 'Stage Transition',
-                details: `Moved ${lead.fullName} to ${stage}`,
-                status: 'success',
-              },
-              ...state.systemLogs,
-            ],
-          };
+        const newSub: AgencySubscription = {
+          id: `sub-${Date.now().toString(36)}`,
+          workspaceId: id,
+          customerName: newWs.name,
+          plan: newWs.plan,
+          status: 'active',
+          nextInvoice: '2026-11-01',
+          amount: newWs.revenue,
+          paymentMethod: 'Visa ending in 4242',
+        };
+
+        const newGhl: GhlSubAccount = {
+          id: `ghl-${Date.now().toString(36)}`,
+          workspaceId: id,
+          subAccountName: newWs.subAccountName,
+          locationId: `loc_${Date.now().toString(36)}`,
+          syncStatus: 'Connected',
+          lastSync: 'Just now',
+          contactsSynced: 0,
+          pipelinesMapped: 3,
+          customFieldsCount: 16,
+        };
+
+        set((state) => ({
+          clientWorkspaces: [newWs, ...state.clientWorkspaces],
+          agencySubscriptions: [newSub, ...state.agencySubscriptions],
+          ghlSubAccounts: [newGhl, ...state.ghlSubAccounts],
+        }));
+      },
+
+      updatePricingAssumption: (key: keyof PricingAssumptions, val: number) => {
+        set((state) => ({
+          pricingAssumptions: {
+            ...state.pricingAssumptions,
+            [key]: val,
+          },
+        }));
+      },
+
+      updatePlanDefinition: (planName: PlanTier, updates: Partial<PlanDefinition>) => {
+        set((state) => ({
+          planDefinitions: state.planDefinitions.map((p) =>
+            p.name === planName ? { ...p, ...updates } : p
+          ),
+        }));
+      },
+
+      retryFailedPayment: async (subId: string): Promise<boolean> => {
+        await fakeDelay(500);
+        set((state) => ({
+          agencySubscriptions: state.agencySubscriptions.map((s) =>
+            s.id === subId ? { ...s, status: 'active' } : s
+          ),
+          agencyInvoices: state.agencyInvoices.map((inv) =>
+            inv.status === 'Failed' ? { ...inv, status: 'Paid' } : inv
+          ),
+        }));
+        return true;
+      },
+
+      runIsolationAudit: async () => {
+        set({ isolationAuditRunning: true, isolationAuditCompleted: false });
+        await fakeDelay(1500);
+        set({
+          isolationAuditRunning: false,
+          isolationAuditCompleted: true,
+          isolationChecks: INITIAL_ISOLATION_CHECKS.map((c) => ({
+            ...c,
+            rowsReturned: 0,
+            status: 'PASS',
+          })),
         });
+      },
+
+      // Client Actions
+      submitWebsiteInquiry: async (inquiry) => {
+        await fakeDelay(450);
+        const newLead: Lead = {
+          id: `lead-inbound-${Date.now().toString(36)}`,
+          workspace_id: get().currentWorkspaceId,
+          fullName: inquiry.fullName,
+          email: inquiry.email,
+          phone: inquiry.phone,
+          title: 'Direct Website Lead',
+          company: inquiry.company || 'Private Practice',
+          location: 'Inbound Webhook',
+          source: 'web_form',
+          stage: 'Lead',
+          score: 88,
+          scoreReason: 'Direct inbound web form submission with explicit consent.',
+          consent: {
+            status: 'opted_in',
+            date: new Date().toISOString(),
+            source: 'Embedded Web Form',
+          },
+          tags: ['website-inquiry', 'b2c-capture'],
+          timeline: [
+            {
+              id: `evt-${Date.now()}`,
+              date: 'Just now',
+              type: 'form_submit',
+              title: 'Website Inquiry Submitted',
+              note: inquiry.message || 'Customer submitted contact inquiry via website modal.',
+            },
+          ],
+          updatedAt: 'Just now',
+        };
+
+        set((state) => ({
+          leads: [newLead, ...state.leads],
+          websiteInboundLeadSuccess: true,
+        }));
+
+        setTimeout(() => {
+          set({ websiteInboundLeadSuccess: false });
+        }, 3000);
+      },
+
+      updateClientWorkspacePlan: (workspaceId: string, plan: PlanTier) => {
+        set((state) => ({
+          clientWorkspaces: state.clientWorkspaces.map((w) =>
+            w.id === workspaceId ? { ...w, plan } : w
+          ),
+          agencySubscriptions: state.agencySubscriptions.map((s) =>
+            s.workspaceId === workspaceId ? { ...s, plan } : s
+          ),
+        }));
+      },
+
+      // Onboarding Wizard Actions
+      setOnboardingStep: (step: number) => {
+        set((state) => ({
+          onboarding: { ...state.onboarding, step },
+        }));
+      },
+
+      updateOnboardingAccount: (patch) => {
+        set((state) => ({
+          onboarding: {
+            ...state.onboarding,
+            account: { ...state.onboarding.account, ...patch },
+          },
+        }));
+      },
+
+      setOnboardingPlan: (plan: PlanTier, billingCycle: 'monthly' | 'yearly') => {
+        set((state) => ({
+          onboarding: {
+            ...state.onboarding,
+            plan,
+            billingCycle,
+          },
+        }));
+      },
+
+      updateOnboardingPayment: (patch) => {
+        set((state) => ({
+          onboarding: {
+            ...state.onboarding,
+            payment: { ...state.onboarding.payment, ...patch },
+          },
+        }));
+      },
+
+      toggleOnboardingIntegration: (key: string) => {
+        set((state) => ({
+          onboarding: {
+            ...state.onboarding,
+            integrations: {
+              ...state.onboarding.integrations,
+              [key]: !state.onboarding.integrations[key],
+            },
+          },
+        }));
+      },
+
+      tickOnboardingCrmCheck: (key: keyof OnboardingState['crmChecklist']) => {
+        set((state) => ({
+          onboarding: {
+            ...state.onboarding,
+            crmChecklist: {
+              ...state.onboarding.crmChecklist,
+              [key]: true,
+            },
+          },
+        }));
+      },
+
+      toggleOnboardingCampaignCheck: (key: keyof OnboardingState['campaignChecklist']) => {
+        set((state) => ({
+          onboarding: {
+            ...state.onboarding,
+            campaignChecklist: {
+              ...state.onboarding.campaignChecklist,
+              [key]: !state.onboarding.campaignChecklist[key],
+            },
+          },
+        }));
+      },
+
+      finishOnboarding: () => {
+        const state = get();
+        const account = state.onboarding.account;
+        const newId = `ws-${account.companyName.toLowerCase().replace(/[^a-z0-9]/g, '-') || 'client'}`;
+
+        const createdWs: ClientWorkspace = {
+          id: newId,
+          name: account.companyName || 'Sterling Aesthetics',
+          industry: account.industry || 'Medical Aesthetics',
+          type: 'B2B',
+          plan: state.onboarding.plan,
+          status: 'active',
+          leadsThisMonth: 0,
+          emailsSent: 0,
+          smsSent: 0,
+          postsPublished: 0,
+          aiSpend: 0,
+          revenue: state.onboarding.plan === 'Scale' ? 799 : state.onboarding.plan === 'Starter' ? 149 : 349,
+          margin: 78.5,
+          crmStatus: 'connected',
+          lastActivity: 'Just now',
+          tokenCostPerLead: 0.025,
+          tokenCostPerCampaign: 4.2,
+          subAccountName: `${account.companyName} GHL Sub-Account`,
+          contactsSynced: 0,
+          pipelinesMapped: 3,
+          dailySpendCap: 25,
+          modelSplit: { small: 75, large: 25 },
+          conversationsNeedingReply: 0,
+        };
+
+        const createdSub: AgencySubscription = {
+          id: `sub-${Date.now().toString(36)}`,
+          workspaceId: newId,
+          customerName: createdWs.name,
+          plan: createdWs.plan,
+          status: 'active',
+          nextInvoice: '2026-11-01',
+          amount: createdWs.revenue,
+          paymentMethod: 'Visa ending in 4242',
+        };
+
+        const createdGhl: GhlSubAccount = {
+          id: `ghl-${Date.now().toString(36)}`,
+          workspaceId: newId,
+          subAccountName: createdWs.subAccountName,
+          locationId: `loc_${Date.now().toString(36)}`,
+          syncStatus: 'Connected',
+          lastSync: 'Just now',
+          contactsSynced: 0,
+          pipelinesMapped: 3,
+          customFieldsCount: 16,
+        };
+
+        set({
+          clientWorkspaces: [createdWs, ...state.clientWorkspaces],
+          agencySubscriptions: [createdSub, ...state.agencySubscriptions],
+          ghlSubAccounts: [createdGhl, ...state.ghlSubAccounts],
+          currentWorkspaceId: newId,
+          appMode: 'client',
+        });
+
+        return newId;
+      },
+
+      // Core Domain Actions
+      addLead: (lead: Lead) => {
+        set((state) => ({ leads: [lead, ...state.leads] }));
+      },
+
+      updateLeadStage: (id: string, stage: CrmStage) => {
+        set((state) => ({
+          leads: state.leads.map((l) =>
+            l.id === id
+              ? {
+                  ...l,
+                  stage,
+                  timeline: [
+                    {
+                      id: `evt-${Date.now()}`,
+                      date: 'Just now',
+                      type: 'stage_changed',
+                      title: `Stage moved to ${stage}`,
+                      note: 'CRM pipeline stage updated via board interaction.',
+                    },
+                    ...l.timeline,
+                  ],
+                }
+              : l
+          ),
+        }));
       },
 
       updateLead: (id: string, updates: Partial<Lead>) => {
@@ -247,62 +719,45 @@ export const useDemoStore = create<DemoState>()(
       },
 
       addPlan: (plan: PlannedCampaign) => {
-        set((state) => ({
-          plans: [plan, ...state.plans],
-          systemLogs: [
-            {
-              id: `log_${Date.now()}`,
-              workspace_id: plan.workspace_id,
-              type: 'ai_action',
-              timestamp: new Date().toISOString().replace('T', ' ').slice(0, 16),
-              actor: 'AI Command Center',
-              action: 'Structured Plan Generated',
-              details: `Generated plan for: "${plan.prompt.slice(0, 60)}..."`,
-              status: 'success',
-            },
-            ...state.systemLogs,
-          ],
-        }));
+        set((state) => ({ plans: [plan, ...state.plans] }));
       },
 
       approvePlan: (planId: string) => {
-        const plan = get().plans.find((p) => p.id === planId);
+        const state = get();
+        const plan = state.plans.find((p) => p.id === planId);
         if (!plan) return;
 
         const newRun: WorkflowRun = {
-          id: `run_${Date.now().toString().slice(-4)}`,
+          id: `run-${Date.now()}`,
           workspace_id: plan.workspace_id,
-          workflowName: `Execution: ${plan.audience}`,
-          trigger: `Approval Gate Confirmed (${planId})`,
-          status: 'running',
-          startedAt: new Date().toISOString().replace('T', ' ').slice(0, 19),
-          duration: '32s elapsed',
           campaignId: plan.id,
+          workflowName: plan.audience,
+          trigger: 'Manual Approval',
+          status: 'running',
+          startedAt: 'Just now',
+          duration: '0s',
           steps: [
-            { id: 's1', name: 'Audience Criteria Match', status: 'done', latency: '340ms', outputSummary: `Resolved ${plan.count} target prospects` },
-            { id: 's2', name: 'Email Verification Pipeline', status: 'done', latency: '820ms', outputSummary: 'ZeroBounce validation passed' },
-            { id: 's3', name: 'LLM Multi-Touch Copy Generation', status: 'running', latency: '1.4s', outputSummary: 'Synthesizing personalized hooks' },
-            { id: 's4', name: 'CRM Stage Association', status: 'waiting', latency: '-' },
+            {
+              id: 'st-1',
+              name: 'Ingest and Deduplicate Audience',
+              status: 'done',
+              latency: '420ms',
+              outputSummary: `Prepared ${plan.count} contacts from targeting parameters.`,
+            },
+            {
+              id: 'st-2',
+              name: 'Enrich and Score Contacts via LLM',
+              status: 'running',
+              latency: '850ms',
+              outputSummary: 'Classifying decision-maker titles and scoring propensity.',
+            },
           ],
         };
 
-        set((state) => ({
+        set({
           plans: state.plans.map((p) => (p.id === planId ? { ...p, status: 'approved' } : p)),
           runs: [newRun, ...state.runs],
-          systemLogs: [
-            {
-              id: `log_${Date.now()}`,
-              workspace_id: plan.workspace_id,
-              type: 'audit',
-              timestamp: new Date().toISOString().replace('T', ' ').slice(0, 16),
-              actor: `${state.currentRole}@${state.currentWorkspaceId}.demo`,
-              action: 'Plan Approved',
-              details: `Approved campaign ${planId}. Dispatched n8n workflow ${newRun.id}.`,
-              status: 'success',
-            },
-            ...state.systemLogs,
-          ],
-        }));
+        });
       },
 
       rejectPlan: (planId: string) => {
@@ -314,7 +769,9 @@ export const useDemoStore = create<DemoState>()(
       requestChanges: (planId: string, comment: string) => {
         set((state) => ({
           plans: state.plans.map((p) =>
-            p.id === planId ? { ...p, status: 'changes_requested', feedbackComment: comment } : p
+            p.id === planId
+              ? { ...p, status: 'changes_requested', feedbackComment: comment }
+              : p
           ),
         }));
       },
@@ -326,28 +783,10 @@ export const useDemoStore = create<DemoState>()(
               ? {
                   ...r,
                   status: 'running',
-                  error: undefined,
-                  steps: r.steps.map((s) => ({ ...s, status: s.status === 'failed' ? 'running' : s.status })),
                 }
               : r
           ),
         }));
-
-        // Simulate retry completion after 800ms
-        setTimeout(() => {
-          set((state) => ({
-            runs: state.runs.map((r) =>
-              r.id === runId
-                ? {
-                    ...r,
-                    status: 'success',
-                    duration: '2m 14s',
-                    steps: r.steps.map((s) => ({ ...s, status: 'done', latency: '420ms' })),
-                  }
-                : r
-            ),
-          }));
-        }, 800);
       },
 
       addRun: (run: WorkflowRun) => {
@@ -364,41 +803,20 @@ export const useDemoStore = create<DemoState>()(
         set((state) => ({ ruleLogs: [log, ...state.ruleLogs] }));
       },
 
-      testConnection: async (connId: string) => {
-        const currentWs = get().currentWorkspaceId;
-        const connList = get().connections[currentWs] || [];
-        const conn = connList.find((c) => c.id === connId);
-        if (!conn) return false;
-
-        // Set to testing status
-        set((state) => ({
-          connections: {
-            ...state.connections,
-            [currentWs]: state.connections[currentWs].map((c) =>
-              c.id === connId ? { ...c, status: 'testing' } : c
-            ),
-          },
-        }));
-
-        await new Promise((r) => setTimeout(r, 650));
-
-        // Mark connected with updated timestamp
-        const nowStr = new Date().toISOString().replace('T', ' ').slice(0, 16);
-        set((state) => ({
-          connections: {
-            ...state.connections,
-            [currentWs]: state.connections[currentWs].map((c) =>
-              c.id === connId
-                ? {
-                    ...c,
-                    status: 'connected',
-                    lastTested: nowStr,
-                    details: 'Handshake 200 OK. Ping latency 380ms.',
-                  }
-                : c
-            ),
-          },
-        }));
+      testConnection: async (connId: string): Promise<boolean> => {
+        await fakeDelay(500);
+        set((state) => {
+          const currentWsConns = state.connections[state.currentWorkspaceId] || [];
+          const updated = currentWsConns.map((c) =>
+            c.id === connId ? { ...c, status: 'connected' as const, lastTested: 'Just now' } : c
+          );
+          return {
+            connections: {
+              ...state.connections,
+              [state.currentWorkspaceId]: updated,
+            },
+          };
+        });
         return true;
       },
 
@@ -478,10 +896,24 @@ export const useDemoStore = create<DemoState>()(
       name: 'ai_marketing_demo_storage',
       storage: createJSONStorage(() => localStorage),
       partialize: (state) => ({
+        appMode: state.appMode,
+        supportSessionWorkspace: state.supportSessionWorkspace,
         currentWorkspaceId: state.currentWorkspaceId,
         currentRole: state.currentRole,
         showDataScope: state.showDataScope,
         darkMode: state.darkMode,
+        clientWorkspaces: state.clientWorkspaces,
+        planDefinitions: state.planDefinitions,
+        pricingAssumptions: state.pricingAssumptions,
+        agencySubscriptions: state.agencySubscriptions,
+        agencyInvoices: state.agencyInvoices,
+        ghlSubAccounts: state.ghlSubAccounts,
+        ghlErrors: state.ghlErrors,
+        agencyTeam: state.agencyTeam,
+        systemWorkflows: state.systemWorkflows,
+        clientReports: state.clientReports,
+        websiteForms: state.websiteForms,
+        onboarding: state.onboarding,
         leads: state.leads,
         plans: state.plans,
         runs: state.runs,

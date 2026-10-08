@@ -38,6 +38,12 @@ export const GuidedTourHUD: React.FC = () => {
   // Auto-navigate to step's route when step changes
   useEffect(() => {
     if (tourActive && currentStep) {
+      if (currentStep.route.startsWith('/agency')) {
+        useDemoStore.getState().setAppMode('agency');
+      } else if (currentStep.route.startsWith('/client')) {
+        useDemoStore.getState().setAppMode('client');
+      }
+
       if (location.pathname !== currentStep.route) {
         navigate(currentStep.route);
       }

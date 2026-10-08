@@ -1,4 +1,4 @@
-export type WorkspaceId = 'halden' | 'lakeview' | 'ridgeway';
+export type WorkspaceId = string;
 export type UserRole = 'owner' | 'admin' | 'operator' | 'viewer';
 
 export interface WorkspaceLimits {
@@ -266,3 +266,148 @@ export interface CrmTask {
   completed: boolean;
   priority: 'low' | 'medium' | 'high';
 }
+
+export type AppMode = 'agency' | 'client';
+export type PlanTier = 'Starter' | 'Growth' | 'Scale';
+export type WorkspaceStatus = 'active' | 'trial' | 'past due' | 'paused';
+export type WorkspaceBusinessModel = 'B2B' | 'B2C' | 'mixed';
+
+export interface ClientWorkspace {
+  id: string;
+  name: string;
+  industry: string;
+  type: WorkspaceBusinessModel;
+  plan: PlanTier;
+  status: WorkspaceStatus;
+  leadsThisMonth: number;
+  emailsSent: number;
+  smsSent: number;
+  postsPublished: number;
+  aiSpend: number;
+  revenue: number;
+  margin: number;
+  crmStatus: 'connected' | 'syncing' | 'error' | 'pending';
+  lastActivity: string;
+  tokenCostPerLead: number;
+  tokenCostPerCampaign: number;
+  subAccountName: string;
+  contactsSynced: number;
+  pipelinesMapped: number;
+  dailySpendCap: number;
+  modelSplit: { small: number; large: number };
+  conversationsNeedingReply: number;
+}
+
+export interface PlanDefinition {
+  name: PlanTier;
+  price: number;
+  leads: number;
+  emails: number;
+  sms: number;
+  posts: number;
+  seats: number;
+  includedAiSpend: number;
+  description: string;
+}
+
+export interface PricingAssumptions {
+  avgTokensPerLead: number;
+  costPer1mSmallModel: number;
+  costPer1mLargeModel: number;
+  apolloCostPerLead: number;
+  emailCostPer1k: number;
+  smsCostPerSegment: number;
+}
+
+export interface AgencySubscription {
+  id: string;
+  workspaceId: string;
+  customerName: string;
+  plan: PlanTier;
+  status: 'active' | 'past_due' | 'trialing';
+  nextInvoice: string;
+  amount: number;
+  paymentMethod: string;
+}
+
+export interface AgencyInvoice {
+  id: string;
+  workspaceId: string;
+  workspaceName: string;
+  amount: number;
+  date: string;
+  status: 'Paid' | 'Failed' | 'Pending';
+  method: string;
+}
+
+export interface GhlSubAccount {
+  id: string;
+  workspaceId: string;
+  subAccountName: string;
+  locationId: string;
+  syncStatus: 'Connected' | 'Syncing' | 'Error';
+  lastSync: string;
+  contactsSynced: number;
+  pipelinesMapped: number;
+  customFieldsCount: number;
+}
+
+export interface GhlError {
+  id: string;
+  workspaceName: string;
+  errorCode: string;
+  message: string;
+  timestamp: string;
+}
+
+export interface AgencyTeamMember {
+  id: string;
+  name: string;
+  email: string;
+  role: 'super_admin' | 'support' | 'billing';
+  lastActive: string;
+}
+
+export interface SystemWorkflowHealth {
+  id: string;
+  name: string;
+  status: 'healthy' | 'degraded' | 'paused';
+  executions24h: number;
+  errorRate: number;
+  avgDurationMs: number;
+}
+
+export interface ClientReport {
+  id: string;
+  workspaceId: string;
+  title: string;
+  type: 'Weekly' | 'Monthly';
+  period: string;
+  leadsGenerated: number;
+  repliesReceived: number;
+  spend: number;
+  roi: string;
+  status: 'Ready' | 'Processing';
+}
+
+export interface WebsiteInboundForm {
+  id: string;
+  workspaceId: string;
+  name: string;
+  endpointUrl: string;
+  submissionsCount: number;
+  conversionRate: string;
+  lastSubmission: string;
+  status: 'active' | 'paused';
+}
+
+export interface IsolationAuditCheck {
+  id: number;
+  name: string;
+  targetTable: string;
+  attemptedAction: string;
+  rowsReturned: number;
+  status: 'PASS' | 'FAIL';
+  enforcementRule: string;
+}
+

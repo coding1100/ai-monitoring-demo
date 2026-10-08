@@ -1,6 +1,6 @@
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Play, Sparkles } from 'lucide-react';
+import { Play } from 'lucide-react';
 import { useDemoStore } from '../../store/useDemoStore';
 import { DiagramChip } from '../common/DiagramChip';
 
@@ -53,6 +53,42 @@ export const Header: React.FC = () => {
         return { title: 'Executive Operations Dashboard', chip: '05 Output / Dashboard', type: 'built' };
       case '/output/costs':
         return { title: 'Unit Economics & Token Expenditure', chip: '05 Output / Costs', type: 'built' };
+
+      // Agency Admin Screens
+      case '/agency/overview':
+        return { title: 'Agency Operations Overview', chip: '05 Output / Agency Hub', type: 'built' };
+      case '/agency/workspaces':
+        return { title: 'Client Workspaces Directory', chip: '01 Control / Multi-Tenant Directory', type: 'built' };
+      case '/agency/usage-cost':
+        return { title: 'Token Telemetry & Margins', chip: '05 Output / Unit Economics', type: 'built' };
+      case '/agency/pricing-forecast':
+        return { title: 'Pricing & Forecast Projections', chip: '05 Output / Forecasting', type: 'built' };
+      case '/agency/billing':
+        return { title: 'Agency Billing & Stripe Dunning', chip: '05 Output / Billing Gateway', type: 'bought' };
+      case '/agency/gohighlevel':
+        return { title: 'GoHighLevel Sub-Accounts & Mapping', chip: '04 Data / GHL Gateway', type: 'bought' };
+      case '/agency/team':
+        return { title: 'Agency Team & Access Governance', chip: '01 Control / Agency Access', type: 'built' };
+      case '/agency/health':
+        return { title: 'System Health & Orchestration Alerts', chip: '02 Orchestration / Telemetry', type: 'built' };
+      case '/agency/isolation':
+        return { title: 'Workspace Isolation & RLS Security', chip: '04 Data / Security Boundary', type: 'database' };
+
+      // Client Workspace Screens
+      case '/client/home':
+        return { title: 'Workspace Operations Hub', chip: '05 Output / Client Hub', type: 'built' };
+      case '/client/reports':
+        return { title: 'Performance Reports & Digests', chip: '05 Output / Reporting', type: 'built' };
+      case '/client/plan-usage':
+        return { title: 'Plan & Usage Resource Meters', chip: '05 Output / Resource Meters', type: 'built' };
+      case '/client/team':
+        return { title: 'Workspace Team & Access', chip: '01 Control / Workspace Team', type: 'built' };
+      case '/client/integrations':
+        return { title: 'Integrations & Service Connectors', chip: '03 Workflows / Connections', type: 'bought' };
+      case '/client/website-integration':
+        return { title: 'Website Integration & Inbound Forms', chip: '03 Workflows / Inbound Capture', type: 'built' };
+
+      // Legacy / Auth / Onboarding
       case '/workspace/integrations':
         return { title: 'Workspace Third-Party Connections', chip: 'Workspace / Integrations', type: 'bought' };
       case '/workspace/team':
@@ -62,7 +98,7 @@ export const Header: React.FC = () => {
       case '/workspace/settings':
         return { title: 'Workspace Operational Parameters', chip: 'Workspace / Settings', type: 'built' };
       case '/onboarding':
-        return { title: 'Workspace Onboarding Checklist', chip: 'Auth / Onboarding Checklist', type: 'built' };
+        return { title: 'Workspace Onboarding Wizard', chip: 'Auth / Onboarding Checklist', type: 'built' };
       case '/auth/login':
         return { title: 'Sign In to Workspace', chip: 'Auth / Login', type: 'built' };
       case '/auth/register':
@@ -93,7 +129,7 @@ export const Header: React.FC = () => {
           <button
             onClick={handleStartGuidedFlow}
             className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-control bg-blue-600 hover:bg-blue-700 text-white shadow-sm transition-all duration-150 active:translate-y-[1px]"
-            title="Starts the 11-step interactive tour traversing all architecture components"
+            title="Starts the 18-step interactive tour traversing all architecture components"
           >
             <Play className="w-3.5 h-3.5 fill-current" strokeWidth={1.5} />
             <span>Play end-to-end flow</span>

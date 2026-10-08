@@ -40,11 +40,30 @@ const LogsPage = lazy(() => import('./pages/data/LogsPage').then(m => ({ default
 const DashboardPage = lazy(() => import('./pages/output/DashboardPage').then(m => ({ default: m.DashboardPage })));
 const CostsPage = lazy(() => import('./pages/output/CostsPage').then(m => ({ default: m.CostsPage })));
 
-// Workspace
+// Legacy Workspace
 const IntegrationsPage = lazy(() => import('./pages/workspace/IntegrationsPage').then(m => ({ default: m.IntegrationsPage })));
 const TeamRolesPage = lazy(() => import('./pages/workspace/TeamRolesPage').then(m => ({ default: m.TeamRolesPage })));
 const PlanUsagePage = lazy(() => import('./pages/workspace/PlanUsagePage').then(m => ({ default: m.PlanUsagePage })));
 const WorkspaceSettingsPage = lazy(() => import('./pages/workspace/WorkspaceSettingsPage').then(m => ({ default: m.WorkspaceSettingsPage })));
+
+// Agency Admin Layer
+const AgencyOverviewPage = lazy(() => import('./pages/agency/AgencyOverviewPage').then(m => ({ default: m.AgencyOverviewPage })));
+const AgencyWorkspacesPage = lazy(() => import('./pages/agency/AgencyWorkspacesPage').then(m => ({ default: m.AgencyWorkspacesPage })));
+const AgencyUsageCostPage = lazy(() => import('./pages/agency/AgencyUsageCostPage').then(m => ({ default: m.AgencyUsageCostPage })));
+const AgencyPricingForecastPage = lazy(() => import('./pages/agency/AgencyPricingForecastPage').then(m => ({ default: m.AgencyPricingForecastPage })));
+const AgencyBillingPage = lazy(() => import('./pages/agency/AgencyBillingPage').then(m => ({ default: m.AgencyBillingPage })));
+const AgencyGhlPage = lazy(() => import('./pages/agency/AgencyGhlPage').then(m => ({ default: m.AgencyGhlPage })));
+const AgencyTeamPage = lazy(() => import('./pages/agency/AgencyTeamPage').then(m => ({ default: m.AgencyTeamPage })));
+const AgencyHealthPage = lazy(() => import('./pages/agency/AgencyHealthPage').then(m => ({ default: m.AgencyHealthPage })));
+const AgencyIsolationPage = lazy(() => import('./pages/agency/AgencyIsolationPage').then(m => ({ default: m.AgencyIsolationPage })));
+
+// Client Workspace Layer
+const ClientHomePage = lazy(() => import('./pages/client/ClientHomePage').then(m => ({ default: m.ClientHomePage })));
+const ClientReportsPage = lazy(() => import('./pages/client/ClientReportsPage').then(m => ({ default: m.ClientReportsPage })));
+const ClientPlanUsagePage = lazy(() => import('./pages/client/ClientPlanUsagePage').then(m => ({ default: m.ClientPlanUsagePage })));
+const ClientTeamPage = lazy(() => import('./pages/client/ClientTeamPage').then(m => ({ default: m.ClientTeamPage })));
+const ClientIntegrationsPage = lazy(() => import('./pages/client/ClientIntegrationsPage').then(m => ({ default: m.ClientIntegrationsPage })));
+const ClientWebsiteIntegrationPage = lazy(() => import('./pages/client/ClientWebsiteIntegrationPage').then(m => ({ default: m.ClientWebsiteIntegrationPage })));
 
 const RouteLoadingFallback = () => (
   <div className="space-y-4 animate-pulse p-6">
@@ -97,6 +116,25 @@ function App() {
             <Route path="/workspace/team" element={<TeamRolesPage />} />
             <Route path="/workspace/usage" element={<PlanUsagePage />} />
             <Route path="/workspace/settings" element={<WorkspaceSettingsPage />} />
+
+            {/* Agency Admin Screens */}
+            <Route path="/agency/overview" element={<AgencyOverviewPage />} />
+            <Route path="/agency/workspaces" element={<AgencyWorkspacesPage />} />
+            <Route path="/agency/usage-cost" element={<AgencyUsageCostPage />} />
+            <Route path="/agency/pricing-forecast" element={<AgencyPricingForecastPage />} />
+            <Route path="/agency/billing" element={<AgencyBillingPage />} />
+            <Route path="/agency/gohighlevel" element={<AgencyGhlPage />} />
+            <Route path="/agency/team" element={<AgencyTeamPage />} />
+            <Route path="/agency/health" element={<AgencyHealthPage />} />
+            <Route path="/agency/isolation" element={<AgencyIsolationPage />} />
+
+            {/* Client Workspace Screens */}
+            <Route path="/client/home" element={<ClientHomePage />} />
+            <Route path="/client/reports" element={<ClientReportsPage />} />
+            <Route path="/client/plan-usage" element={<ClientPlanUsagePage />} />
+            <Route path="/client/team" element={<ClientTeamPage />} />
+            <Route path="/client/integrations" element={<ClientIntegrationsPage />} />
+            <Route path="/client/website-integration" element={<ClientWebsiteIntegrationPage />} />
 
             {/* Auth & Onboarding */}
             <Route path="/onboarding" element={<OnboardingPage />} />

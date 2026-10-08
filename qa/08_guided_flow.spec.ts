@@ -52,22 +52,22 @@ test.describe('Check 8: Guided Flow (Tour)', () => {
     await page.waitForTimeout(400);
     await expect(page).toHaveURL(/\/control\/approval-gate/);
 
-    // Go forward again to step 3, then proceed through all 11 steps
+    // Go forward again to step 3, then proceed through all 18 steps
     await nextBtn.click(); // to step 3
     await page.waitForTimeout(300);
 
-    // Step through the remaining steps up to 11
-    for (let s = 3; s < 11; s++) {
-      const btn = page.locator('button:has-text("Next"), button[title="Next step"], button:has-text("Finish Tour")').first();
+    // Step through the remaining steps up to 18
+    for (let s = 3; s < 18; s++) {
+      const btn = page.locator('button:has-text("Next"), button[title="Next step"], button:has-text("Finish"), button:has-text("Finish Tour")').first();
       await btn.click();
       await page.waitForTimeout(400);
     }
 
-    // On final step (step 11), URL should be /output/dashboard
-    await expect(page).toHaveURL(/\/output\/dashboard/);
+    // On final step (step 18), URL should be /agency/isolation
+    await expect(page).toHaveURL(/\/agency\/isolation/);
 
     // Exit / Finish tour
-    const exitBtn = page.locator('button:has-text("Finish Tour"), button:has-text("Exit"), button[title="Exit tour"]').first();
+    const exitBtn = page.locator('button:has-text("Finish"), button:has-text("Finish Tour"), button:has-text("Exit"), button[title="Exit tour"]').first();
     if (await exitBtn.isVisible()) {
       await exitBtn.click();
     }

@@ -38,6 +38,7 @@ export const DiagramChip: React.FC<DiagramChipProps> = ({
 
   return (
     <div
+      data-testid="diagram-chip"
       className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[6px] text-xs font-mono-numbers font-medium ${getStyle()} ${className}`}
       title={`Architecture layer box: ${reference} (${getLabel()})`}
     >

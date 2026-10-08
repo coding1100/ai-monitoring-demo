@@ -26,6 +26,52 @@ export const ALL_ROUTES = [
   '/workspace/team',
   '/workspace/usage',
   '/workspace/settings',
+  // Agency Admin Routes
+  '/agency/overview',
+  '/agency/workspaces',
+  '/agency/usage-cost',
+  '/agency/pricing-forecast',
+  '/agency/billing',
+  '/agency/gohighlevel',
+  '/agency/team',
+  '/agency/health',
+  '/agency/isolation',
+  // Client Workspace Routes
+  '/client/home',
+  '/client/reports',
+  '/client/plan-usage',
+  '/client/team',
+  '/client/integrations',
+  '/client/website-integration',
+];
+
+export const AGENCY_ROUTES = [
+  '/agency/overview',
+  '/agency/workspaces',
+  '/agency/usage-cost',
+  '/agency/pricing-forecast',
+  '/agency/billing',
+  '/agency/gohighlevel',
+  '/agency/team',
+  '/agency/health',
+  '/agency/isolation',
+];
+
+export const CLIENT_ROUTES = [
+  '/client/home',
+  '/client/reports',
+  '/client/plan-usage',
+  '/client/team',
+  '/client/integrations',
+  '/client/website-integration',
 ];
 
 export const WORKSPACES = ['halden', 'lakeview', 'ridgeway'] as const;
+export const SIX_MOCK_CLIENTS = [
+  'halden',
+  'lakeview',
+  'ridgeway',
+  'apex-solar',
+  'vanguard-legal',
+  'lumina-skin',
+] as const;
