@@ -5,3 +5,7 @@ dist-ssr
 .env
 .env.*
 .DS_Store
+playwright-report
+test-results
+qa/playwright-report
+
