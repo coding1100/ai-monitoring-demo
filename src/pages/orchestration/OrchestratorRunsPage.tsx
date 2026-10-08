@@ -128,6 +128,7 @@ export const OrchestratorRunsPage: React.FC = () => {
             <span className="text-xs text-slate-500">Filter Status:</span>
             <select
               value={statusFilter}
+              aria-label="Filter runs by execution status"
               onChange={(e) => setStatusFilter(e.target.value)}
               className="px-2.5 py-1 text-xs rounded-control bg-slate-100 dark:bg-slate-900 border border-slate-300/60 dark:border-slate-700/60 text-slate-800 dark:text-slate-200"
             >

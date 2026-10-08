@@ -277,6 +277,7 @@ export const EmailSequencesPage: React.FC = () => {
             <div className="flex items-center gap-2">
               <span className="text-xs text-slate-500">Filter Sentiment:</span>
               <select
+                aria-label="Filter Sentiment"
                 value={selectedSentiment}
                 onChange={(e) => setSelectedSentiment(e.target.value)}
                 className="px-2 py-1 text-xs rounded-control bg-slate-100 dark:bg-slate-900 border border-slate-300/60 dark:border-slate-700 text-slate-800 dark:text-slate-200"

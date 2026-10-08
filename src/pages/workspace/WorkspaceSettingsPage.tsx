@@ -77,6 +77,7 @@ export const WorkspaceSettingsPage: React.FC = () => {
                 Primary Operating Timezone
               </label>
               <select
+                aria-label="Primary Operating Timezone"
                 value={timezone}
                 onChange={(e) => setTimezone(e.target.value)}
                 className="w-full px-3 py-2 text-xs rounded-control bg-slate-100/70 dark:bg-slate-900/60 border border-slate-300/60 dark:border-slate-800 text-slate-900 dark:text-slate-100 font-mono"
@@ -94,6 +95,7 @@ export const WorkspaceSettingsPage: React.FC = () => {
               </label>
               <input
                 type="text"
+                aria-label="Active Sending Hours Window"
                 value={sendingHours}
                 onChange={(e) => setSendingHours(e.target.value)}
                 className="w-full px-3 py-2 text-xs rounded-control bg-slate-100/70 dark:bg-slate-900/60 border border-slate-300/60 dark:border-slate-800 text-slate-900 dark:text-slate-100 font-mono"

@@ -76,6 +76,7 @@ export const LeadsDataPage: React.FC = () => {
             <input
               type="text"
               placeholder="Search by name, company, email, or city..."
+              aria-label="Search leads by name, company, email, or city"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="w-full pl-9 pr-3 py-1.5 text-xs rounded-control bg-slate-100/70 dark:bg-slate-900/60 border border-slate-300/60 dark:border-slate-800 text-slate-900 dark:text-slate-100"
@@ -88,6 +89,7 @@ export const LeadsDataPage: React.FC = () => {
             <span className="text-slate-500">Stage:</span>
             <select
               value={stageFilter}
+              aria-label="Filter leads by pipeline stage"
               onChange={(e) => setStageFilter(e.target.value)}
               className="px-2 py-1 text-xs rounded-control bg-slate-100 dark:bg-slate-900 border border-slate-300/60 dark:border-slate-700 text-slate-800 dark:text-slate-200"
             >
@@ -106,6 +108,7 @@ export const LeadsDataPage: React.FC = () => {
             <span className="text-slate-500">Source:</span>
             <select
               value={sourceFilter}
+              aria-label="Filter leads by acquisition source"
               onChange={(e) => setSourceFilter(e.target.value)}
               className="px-2 py-1 text-xs rounded-control bg-slate-100 dark:bg-slate-900 border border-slate-300/60 dark:border-slate-700 text-slate-800 dark:text-slate-200"
             >
@@ -205,7 +208,12 @@ export const LeadsDataPage: React.FC = () => {
       {/* Slide-over Detail Drawer (Level 2 surface) */}
       {selectedLead && (
         <div className="fixed inset-0 z-50 overflow-hidden bg-black/40 backdrop-blur-sm animate-fade-in flex justify-end">
-          <div className="w-full max-w-xl glass-modal h-full p-6 overflow-y-auto space-y-6 shadow-2xl border-l border-slate-300/40 dark:border-slate-800/60">
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-label="Prospect Dossier"
+            className="w-full max-w-xl glass-modal h-full p-6 overflow-y-auto space-y-6 shadow-2xl border-l border-slate-300/40 dark:border-slate-800/60"
+          >
             {/* Drawer Header */}
             <div className="flex items-start justify-between pb-4 border-b border-slate-200/50 dark:border-slate-800/50">
               <div>
@@ -227,6 +235,7 @@ export const LeadsDataPage: React.FC = () => {
 
               <button
                 onClick={() => setSelectedLead(null)}
+                aria-label="Close prospect dossier"
                 className="p-1.5 rounded-control text-slate-400 hover:text-slate-900 dark:hover:text-slate-100"
               >
                 <X className="w-5 h-5" />
@@ -322,6 +331,7 @@ export const LeadsDataPage: React.FC = () => {
               <div className="text-xs font-mono uppercase text-slate-500">Internal Rep Notes</div>
               <textarea
                 rows={2}
+                aria-label="Internal Rep Notes"
                 value={selectedLead.notes || ''}
                 onChange={(e) => updateLead(selectedLead.id, { notes: e.target.value })}
                 className="w-full p-2.5 text-xs rounded-control bg-slate-100/70 dark:bg-slate-900/60 border border-slate-300/60 dark:border-slate-800 text-slate-900 dark:text-slate-100"

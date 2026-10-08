@@ -147,6 +147,7 @@ export const TeamRolesPage: React.FC = () => {
                 <input
                   type="email"
                   placeholder="colleague@company.com"
+                  aria-label="Email Address"
                   value={inviteEmail}
                   onChange={(e) => setInviteEmail(e.target.value)}
                   className="w-full px-2.5 py-1.5 rounded-control bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-800"
@@ -158,6 +159,7 @@ export const TeamRolesPage: React.FC = () => {
                   Assigned Role
                 </label>
                 <select
+                  aria-label="Assigned Role"
                   value={inviteRole}
                   onChange={(e) => setInviteRole(e.target.value as UserRole)}
                   className="w-full px-2.5 py-1.5 rounded-control bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-800 capitalize"

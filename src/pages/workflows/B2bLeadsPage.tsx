@@ -107,11 +107,13 @@ export const B2bLeadsPage: React.FC = () => {
 
             <div className="space-y-3">
               <div>
-                <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
+                <label htmlFor="b2b-industry" className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
                   Target Vertical / Industry
                 </label>
                 <input
+                  id="b2b-industry"
                   type="text"
+                  aria-label="Target Vertical / Industry"
                   value={industry}
                   onChange={(e) => setIndustry(e.target.value)}
                   className="w-full px-3 py-1.5 text-xs rounded-control bg-slate-100/70 dark:bg-slate-900/60 border border-slate-300/60 dark:border-slate-800 text-slate-900 dark:text-slate-100"
@@ -119,11 +121,13 @@ export const B2bLeadsPage: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
+                <label htmlFor="b2b-location" className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
                   Geographic Location
                 </label>
                 <input
+                  id="b2b-location"
                   type="text"
+                  aria-label="Geographic Location"
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
                   className="w-full px-3 py-1.5 text-xs rounded-control bg-slate-100/70 dark:bg-slate-900/60 border border-slate-300/60 dark:border-slate-800 text-slate-900 dark:text-slate-100"
@@ -131,10 +135,12 @@ export const B2bLeadsPage: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
+                <label htmlFor="b2b-headcount" className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
                   Company Headcount Range
                 </label>
                 <select
+                  id="b2b-headcount"
+                  aria-label="Company Headcount Range"
                   value={companySize}
                   onChange={(e) => setCompanySize(e.target.value)}
                   className="w-full px-3 py-1.5 text-xs rounded-control bg-slate-100/70 dark:bg-slate-900/60 border border-slate-300/60 dark:border-slate-800 text-slate-900 dark:text-slate-100"
@@ -146,11 +152,13 @@ export const B2bLeadsPage: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
+                <label htmlFor="b2b-titles" className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
                   Target Decision-Maker Titles
                 </label>
                 <input
+                  id="b2b-titles"
                   type="text"
+                  aria-label="Target Decision-Maker Titles"
                   value={titles}
                   onChange={(e) => setTitles(e.target.value)}
                   className="w-full px-3 py-1.5 text-xs rounded-control bg-slate-100/70 dark:bg-slate-900/60 border border-slate-300/60 dark:border-slate-800 text-slate-900 dark:text-slate-100"
@@ -160,7 +168,7 @@ export const B2bLeadsPage: React.FC = () => {
               {/* Volume Slider: 100 to 500+ */}
               <div className="pt-2">
                 <div className="flex items-center justify-between mb-1">
-                  <label className="text-xs font-medium text-slate-700 dark:text-slate-300">
+                  <label htmlFor="b2b-daily-quota" className="text-xs font-medium text-slate-700 dark:text-slate-300">
                     Daily Ingest Quota
                   </label>
                   <span className="text-xs font-mono font-semibold text-accent">
@@ -168,7 +176,9 @@ export const B2bLeadsPage: React.FC = () => {
                   </span>
                 </div>
                 <input
+                  id="b2b-daily-quota"
                   type="range"
+                  aria-label="Daily Ingest Quota"
                   min={100}
                   max={500}
                   step={25}

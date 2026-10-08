@@ -46,6 +46,7 @@ export const RegisterPage: React.FC = () => {
               Industry Vertical
             </label>
             <select
+              aria-label="Industry Vertical"
               value={industry}
               onChange={(e) => setIndustry(e.target.value)}
               className="w-full px-3 py-2 text-xs rounded-control bg-slate-100/70 dark:bg-slate-900/50 border border-slate-300/60 dark:border-slate-700/60 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-accent"

@@ -228,6 +228,7 @@ export const SuppressionPage: React.FC = () => {
                   Type
                 </label>
                 <select
+                  aria-label="Suppression Type"
                   value={newType}
                   onChange={(e) => setNewType(e.target.value as any)}
                   className="w-full px-2.5 py-1.5 rounded-control bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-800 font-mono"
@@ -244,6 +245,7 @@ export const SuppressionPage: React.FC = () => {
                 </label>
                 <input
                   type="text"
+                  aria-label="Suppression Value"
                   value={newValue}
                   onChange={(e) => setNewValue(e.target.value)}
                   className="w-full px-2.5 py-1.5 rounded-control bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-800 font-mono"
@@ -255,6 +257,7 @@ export const SuppressionPage: React.FC = () => {
                   Suppression Reason
                 </label>
                 <select
+                  aria-label="Suppression Reason"
                   value={newReason}
                   onChange={(e) => setNewReason(e.target.value as any)}
                   className="w-full px-2.5 py-1.5 rounded-control bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-800"
