@@ -1,122 +1,104 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import './App.css'
+import React from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { AppLayout } from './components/layout/AppLayout';
+
+// Home
+import { HomeMap } from './pages/HomeMap';
+
+// Auth & Onboarding
+import { LoginPage } from './pages/auth/LoginPage';
+import { RegisterPage } from './pages/auth/RegisterPage';
+import { OnboardingPage } from './pages/auth/OnboardingPage';
+
+// 01 Control
+import { OperatorPage } from './pages/control/OperatorPage';
+import { CommandCenterPage } from './pages/control/CommandCenterPage';
+import { ApprovalGatePage } from './pages/control/ApprovalGatePage';
+
+// 02 Orchestration
+import { OrchestratorRunsPage } from './pages/orchestration/OrchestratorRunsPage';
+import { LlmRouterPage } from './pages/orchestration/LlmRouterPage';
+import { OpenAiPage } from './pages/orchestration/OpenAiPage';
+import { RulesInCodePage } from './pages/orchestration/RulesInCodePage';
+
+// 03 Workflows
+import { B2bLeadsPage } from './pages/workflows/B2bLeadsPage';
+import { B2cCapturePage } from './pages/workflows/B2cCapturePage';
+import { EmailSequencesPage } from './pages/workflows/EmailSequencesPage';
+import { SmsPage } from './pages/workflows/SmsPage';
+import { SocialPage } from './pages/workflows/SocialPage';
+import { FollowUpEnginePage } from './pages/workflows/FollowUpEnginePage';
+
+// 04 Data
+import { LeadsDataPage } from './pages/data/LeadsDataPage';
+import { CrmKanbanPage } from './pages/data/CrmKanbanPage';
+import { SuppressionPage } from './pages/data/SuppressionPage';
+import { LogsPage } from './pages/data/LogsPage';
+
+// 05 Output
+import { DashboardPage } from './pages/output/DashboardPage';
+import { CostsPage } from './pages/output/CostsPage';
+
+// Workspace
+import { IntegrationsPage } from './pages/workspace/IntegrationsPage';
+import { TeamRolesPage } from './pages/workspace/TeamRolesPage';
+import { PlanUsagePage } from './pages/workspace/PlanUsagePage';
+import { WorkspaceSettingsPage } from './pages/workspace/WorkspaceSettingsPage';
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+    <BrowserRouter>
+      <Routes>
+        <Route element={<AppLayout />}>
+          {/* Home System Map */}
+          <Route path="/" element={<HomeMap />} />
 
-      <div className="ticks"></div>
+          {/* 01 Control */}
+          <Route path="/control/operator" element={<OperatorPage />} />
+          <Route path="/control/command-center" element={<CommandCenterPage />} />
+          <Route path="/control/approval-gate" element={<ApprovalGatePage />} />
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+          {/* 02 Orchestration */}
+          <Route path="/orchestration/runs" element={<OrchestratorRunsPage />} />
+          <Route path="/orchestration/llm-router" element={<LlmRouterPage />} />
+          <Route path="/orchestration/openai" element={<OpenAiPage />} />
+          <Route path="/orchestration/rules" element={<RulesInCodePage />} />
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+          {/* 03 Workflows */}
+          <Route path="/workflows/b2b-leads" element={<B2bLeadsPage />} />
+          <Route path="/workflows/b2c-capture" element={<B2cCapturePage />} />
+          <Route path="/workflows/email-sequences" element={<EmailSequencesPage />} />
+          <Route path="/workflows/sms" element={<SmsPage />} />
+          <Route path="/workflows/social" element={<SocialPage />} />
+          <Route path="/workflows/follow-up" element={<FollowUpEnginePage />} />
+
+          {/* 04 Data */}
+          <Route path="/data/leads" element={<LeadsDataPage />} />
+          <Route path="/data/crm" element={<CrmKanbanPage />} />
+          <Route path="/data/suppression" element={<SuppressionPage />} />
+          <Route path="/data/logs" element={<LogsPage />} />
+
+          {/* 05 Output */}
+          <Route path="/output/dashboard" element={<DashboardPage />} />
+          <Route path="/output/costs" element={<CostsPage />} />
+
+          {/* Workspace */}
+          <Route path="/workspace/integrations" element={<IntegrationsPage />} />
+          <Route path="/workspace/team" element={<TeamRolesPage />} />
+          <Route path="/workspace/usage" element={<PlanUsagePage />} />
+          <Route path="/workspace/settings" element={<WorkspaceSettingsPage />} />
+
+          {/* Auth & Onboarding */}
+          <Route path="/onboarding" element={<OnboardingPage />} />
+          <Route path="/auth/login" element={<LoginPage />} />
+          <Route path="/auth/register" element={<RegisterPage />} />
+
+          {/* Fallback */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;
