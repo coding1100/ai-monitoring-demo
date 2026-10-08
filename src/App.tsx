@@ -9,6 +9,7 @@ import { HomeMap } from './pages/HomeMap';
 import { LoginPage } from './pages/auth/LoginPage';
 import { RegisterPage } from './pages/auth/RegisterPage';
 import { OnboardingPage } from './pages/auth/OnboardingPage';
+import { NotFoundPage } from './pages/NotFoundPage';
 
 // 01 Control
 import { OperatorPage } from './pages/control/OperatorPage';
@@ -94,7 +95,7 @@ function App() {
           <Route path="/auth/register" element={<RegisterPage />} />
 
           {/* Fallback */}
-          <Route path="*" element={<Navigate to="/" replace />} />
+          <Route path="*" element={<NotFoundPage />} />
         </Route>
       </Routes>
     </BrowserRouter>
