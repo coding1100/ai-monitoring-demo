@@ -1,0 +1,30 @@
+[
+  {
+    "page": "home",
+    "url": "http://localhost:4173/",
+    "performance": 94,
+    "accessibility": 100,
+    "passed": true
+  },
+  {
+    "page": "dashboard",
+    "url": "http://localhost:4173/output/dashboard",
+    "performance": 80,
+    "accessibility": 96,
+    "passed": true
+  },
+  {
+    "page": "leads",
+    "url": "http://localhost:4173/data/leads",
+    "performance": 84,
+    "accessibility": 100,
+    "passed": true
+  },
+  {
+    "page": "runs",
+    "url": "http://localhost:4173/orchestration/runs",
+    "performance": 83,
+    "accessibility": 100,
+    "passed": true
+  }
+]
