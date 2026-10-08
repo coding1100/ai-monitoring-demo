@@ -364,7 +364,7 @@ export const HomeMap: React.FC = () => {
                 <div className="p-2 rounded-control bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 w-fit">
                   <Share2 className="w-4 h-4" strokeWidth={1.5} />
                 </div>
-                <span className="text-[9px] font-mono px-1 rounded bg-amber-500/20 text-amber-700 dark:text-amber-300">
+                <span className="text-[9px] font-mono px-1 rounded bg-amber-500/20 text-amber-900 dark:text-amber-300 font-semibold">
                   Cond.
                 </span>
               </div>

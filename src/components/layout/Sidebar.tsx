@@ -193,7 +193,7 @@ export const Sidebar: React.FC = () => {
                   <Share2 className="w-3.5 h-3.5 shrink-0" strokeWidth={1.5} />
                   <span>Social</span>
                 </span>
-                <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-amber-500/15 text-amber-700 dark:text-amber-400 border border-amber-500/30">
+                <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-amber-500/15 text-amber-900 dark:text-amber-300 border border-amber-500/30 font-semibold">
                   Cond.
                 </span>
               </div>

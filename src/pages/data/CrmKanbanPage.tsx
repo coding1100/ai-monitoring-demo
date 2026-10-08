@@ -109,7 +109,7 @@ export const CrmKanbanPage: React.FC = () => {
                 type="button"
                 onClick={() => setActiveCrm('hubspot')}
                 className={`px-3 py-1 rounded-[6px] transition-colors ${
-                  activeCrm === 'hubspot' ? 'bg-accent text-white shadow-xs' : 'text-slate-600 dark:text-slate-400'
+                  activeCrm === 'hubspot' ? 'bg-accent text-white shadow-xs' : 'text-slate-700 dark:text-slate-300'
                 }`}
               >
                 HubSpot CRM
@@ -118,7 +118,7 @@ export const CrmKanbanPage: React.FC = () => {
                 type="button"
                 onClick={() => setActiveCrm('ghl')}
                 className={`px-3 py-1 rounded-[6px] transition-colors ${
-                  activeCrm === 'ghl' ? 'bg-accent text-white shadow-xs' : 'text-slate-600 dark:text-slate-400'
+                  activeCrm === 'ghl' ? 'bg-accent text-white shadow-xs' : 'text-slate-700 dark:text-slate-300'
                 }`}
               >
                 GoHighLevel
