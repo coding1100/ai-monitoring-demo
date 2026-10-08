@@ -30,6 +30,7 @@ export const CommandCenterPage: React.FC = () => {
 
   const [prompt, setPrompt] = useState(defaultPrompt);
   const [activePlan, setActivePlan] = useState<PlannedCampaign | null>(null);
+  const [restoredBadge, setRestoredBadge] = useState(false);
 
   const handleGeneratePlan = async () => {
     // Generate deterministic structured plan based on workspace
@@ -137,9 +138,18 @@ export const CommandCenterPage: React.FC = () => {
             Model: OpenAI GPT-4o-mini (Compiler Tier 1) | Seeded determinism enabled
           </div>
           <div className="flex items-center gap-2">
+            {restoredBadge && (
+              <span className="text-[10px] font-mono text-emerald-600 dark:text-emerald-400 font-semibold animate-fade-in">
+                Example prompt restored
+              </span>
+            )}
             <button
               type="button"
-              onClick={() => setPrompt(defaultPrompt)}
+              onClick={() => {
+                setPrompt(defaultPrompt);
+                setRestoredBadge(true);
+                setTimeout(() => setRestoredBadge(false), 2000);
+              }}
               className="px-3 py-2 text-xs font-medium rounded-control text-slate-600 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-colors"
             >
               Reset to Example
@@ -346,10 +356,15 @@ export const CommandCenterPage: React.FC = () => {
                 <button
                   onClick={() => {
                     setActivePlan(p);
+                    setPrompt(p.prompt);
                   }}
-                  className="px-2.5 py-1 rounded-control bg-slate-200/50 dark:bg-slate-800/50 hover:bg-slate-300/50 dark:hover:bg-slate-700/50 text-slate-700 dark:text-slate-300 transition-colors"
+                  className={`px-2.5 py-1 rounded-control text-xs transition-colors ${
+                    activePlan?.id === p.id
+                      ? 'bg-accent text-white font-medium'
+                      : 'bg-slate-200/50 dark:bg-slate-800/50 hover:bg-slate-300/50 dark:hover:bg-slate-700/50 text-slate-700 dark:text-slate-300'
+                  }`}
                 >
-                  Load Plan
+                  {activePlan?.id === p.id ? 'Active Plan' : 'Load Plan'}
                 </button>
               </div>
             </div>

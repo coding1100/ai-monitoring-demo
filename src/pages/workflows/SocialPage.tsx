@@ -156,18 +156,24 @@ export const SocialPage: React.FC = () => {
 
             <div className="space-y-3">
               <div>
-                <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">
-                  Destination Platform
-                </label>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="block text-xs font-medium text-slate-700 dark:text-slate-300">
+                    Destination Platform
+                  </label>
+                  <span className="text-[10px] font-mono text-accent capitalize">
+                    Target: {composerPlatform}
+                  </span>
+                </div>
                 <div className="grid grid-cols-3 gap-2">
                   {(['linkedin', 'instagram', 'facebook'] as const).map((plat) => (
                     <button
                       key={plat}
                       type="button"
+                      aria-pressed={composerPlatform === plat}
                       onClick={() => setComposerPlatform(plat)}
                       className={`p-2 rounded-control border text-xs capitalize flex items-center justify-center gap-1.5 transition-colors ${
                         composerPlatform === plat
-                          ? 'bg-blue-500/15 border-accent text-accent font-medium'
+                          ? 'bg-blue-500/15 border-accent text-accent font-medium active'
                           : 'border-slate-300/40 dark:border-slate-800 text-slate-600 dark:text-slate-400'
                       }`}
                     >

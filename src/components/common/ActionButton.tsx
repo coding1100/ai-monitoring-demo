@@ -68,14 +68,17 @@ export const ActionButton: React.FC<ActionButtonProps> = ({
       'hover:bg-slate-200/40 dark:hover:bg-slate-800/40 text-slate-700 dark:text-slate-300 disabled:opacity-40 disabled:cursor-not-allowed',
   }[variant];
 
+  const tooltipText = isDenied ? permission.reason : (rest.title || (disabled ? 'Action not available' : undefined));
+
   return (
     <span
       className="inline-block relative group"
-      title={isDenied ? permission.reason : undefined}
+      title={tooltipText}
     >
       <button
         {...rest}
         disabled={isDisabled}
+        title={tooltipText}
         onClick={handleClick}
         className={`${baseStyles} ${sizeStyles} ${variantStyles} ${className}`}
       >

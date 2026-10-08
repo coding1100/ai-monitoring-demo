@@ -13,6 +13,7 @@ export const LoginPage: React.FC = () => {
 
   const [email, setEmail] = useState('marcus@haldenpartners.com');
   const [password, setPassword] = useState('••••••••••••');
+  const [workspaceNotice, setWorkspaceNotice] = useState<string | null>(null);
 
   const handleLogin = async () => {
     navigate('/');
@@ -35,15 +36,23 @@ export const LoginPage: React.FC = () => {
 
         <div className="space-y-4">
           <div>
-            <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1.5">
-              Select Demo Workspace
-            </label>
+            <div className="flex items-center justify-between mb-1.5">
+              <label className="block text-xs font-medium text-slate-700 dark:text-slate-300">
+                Select Demo Workspace
+              </label>
+              <span className="text-[10px] font-mono text-emerald-600 dark:text-emerald-400">
+                Active: {workspaceNotice || currentWorkspaceId}
+              </span>
+            </div>
             <div className="grid grid-cols-1 gap-2">
               {WORKSPACES.map((w) => (
                 <button
                   type="button"
                   key={w.id}
-                  onClick={() => setWorkspace(w.id as WorkspaceId)}
+                  onClick={() => {
+                    setWorkspace(w.id as WorkspaceId);
+                    setWorkspaceNotice(w.name);
+                  }}
                   className={`text-left p-2.5 rounded-control border text-xs transition-colors flex items-center justify-between ${
                     w.id === currentWorkspaceId
                       ? 'bg-blue-500/15 border-accent text-slate-900 dark:text-slate-100 font-medium'
@@ -51,7 +60,7 @@ export const LoginPage: React.FC = () => {
                   }`}
                 >
                   <div className="flex items-center gap-2">
-                    <Building2 className="w-3.5 h-3.5 opacity-70" />
+                    <Building2 className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
                     <div>
                       <div>{w.name}</div>
                       <div className="text-[10px] text-slate-500">{w.industry}</div>

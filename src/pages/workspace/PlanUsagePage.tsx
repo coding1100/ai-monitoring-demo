@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   CreditCard,
   CheckCircle2,
@@ -7,6 +7,7 @@ import {
   FileText,
   Download,
   ArrowUpRight,
+  Check,
 } from 'lucide-react';
 import { DiagramChip } from '../../components/common/DiagramChip';
 import { DataScopeBadge } from '../../components/common/DataScopeBadge';
@@ -17,6 +18,12 @@ import { WORKSPACES } from '../../data/mockData';
 export const PlanUsagePage: React.FC = () => {
   const currentWorkspaceId = useDemoStore((state) => state.currentWorkspaceId);
   const currentWs = WORKSPACES.find((w) => w.id === currentWorkspaceId) || WORKSPACES[0];
+  const [downloadedInvoice, setDownloadedInvoice] = useState<string | null>(null);
+
+  const handleDownloadInvoice = (id: string) => {
+    setDownloadedInvoice(id);
+    setTimeout(() => setDownloadedInvoice(null), 2500);
+  };
 
   const limits = currentWs.limits;
 
@@ -165,6 +172,7 @@ export const PlanUsagePage: React.FC = () => {
                   variant={p.active ? 'secondary' : 'primary'}
                   size="sm"
                   disabled={p.active}
+                  title={p.active ? 'Workspace is currently active on this subscription tier' : undefined}
                   className="w-full"
                 >
                   {p.active ? 'Active Plan' : 'Upgrade Workspace'}
@@ -199,10 +207,16 @@ export const PlanUsagePage: React.FC = () => {
                 </span>
                 <button
                   type="button"
-                  className="p-1 rounded hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-500 hover:text-slate-800 dark:hover:text-slate-200"
+                  onClick={() => handleDownloadInvoice(inv.id)}
+                  aria-label={`Download invoice PDF ${inv.id}`}
+                  className="p-1 rounded hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 transition-colors"
                   title="Download PDF"
                 >
-                  <Download className="w-3.5 h-3.5" />
+                  {downloadedInvoice === inv.id ? (
+                    <Check className="w-3.5 h-3.5 text-emerald-600" />
+                  ) : (
+                    <Download className="w-3.5 h-3.5" />
+                  )}
                 </button>
               </div>
             </div>
