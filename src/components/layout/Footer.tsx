@@ -45,10 +45,10 @@ export const Footer: React.FC = () => {
       <div className="flex items-center gap-4">
         {/* Workspace indicator */}
         <div className="flex items-center gap-1.5 font-mono text-[11px] text-slate-700 dark:text-slate-300">
-          <Building className="w-3.5 h-3.5 opacity-70" strokeWidth={1.5} />
+          <Building className="w-3.5 h-3.5 text-slate-600 dark:text-slate-400" strokeWidth={1.5} />
           <span>{currentWs.name}</span>
-          <span className="opacity-40">|</span>
-          <span className="opacity-70">{currentWs.tier}</span>
+          <span className="text-slate-400 dark:text-slate-600" aria-hidden="true">|</span>
+          <span className="font-medium text-slate-700 dark:text-slate-300">{currentWs.tier}</span>
         </div>
 
         {/* Data Scope Toggle */}
@@ -56,8 +56,8 @@ export const Footer: React.FC = () => {
           onClick={toggleDataScope}
           className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[6px] transition-colors border ${
             showDataScope
-              ? 'bg-emerald-500/15 border-emerald-500/30 text-emerald-700 dark:text-emerald-300 font-medium'
-              : 'border-slate-300/40 dark:border-slate-700/40 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100'
+              ? 'bg-emerald-500/15 border-emerald-500/30 text-emerald-800 dark:text-emerald-300 font-medium'
+              : 'border-slate-300/40 dark:border-slate-700/40 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100'
           }`}
           title="Toggles database scope inspector showing workspace_id and Supabase table name"
         >
@@ -77,7 +77,7 @@ export const Footer: React.FC = () => {
             <span>
               View as: <strong className="font-semibold capitalize">{currentRole}</strong>
             </span>
-            <ChevronUp className="w-3.5 h-3.5 opacity-70" />
+            <ChevronUp className="w-3.5 h-3.5 text-slate-600 dark:text-slate-400" />
           </button>
 
           {roleMenuOpen && (
@@ -112,7 +112,7 @@ export const Footer: React.FC = () => {
         {/* Dark/Light mode toggle */}
         <button
           onClick={toggleDarkMode}
-          className="p-1 rounded-[6px] hover:bg-slate-200/50 dark:hover:bg-slate-800/50 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition-colors"
+          className="p-1 rounded-[6px] hover:bg-slate-200/50 dark:hover:bg-slate-800/50 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100 transition-colors"
           title={`Switch to ${darkMode ? 'light' : 'dark'} mode`}
           aria-label="Toggle theme"
         >
@@ -123,7 +123,7 @@ export const Footer: React.FC = () => {
         <div className="relative">
           <button
             onClick={() => setResetConfirmOpen(true)}
-            className="inline-flex items-center gap-1 text-slate-500 hover:text-red-600 dark:hover:text-red-400 transition-colors underline underline-offset-2 ml-1"
+            className="inline-flex items-center gap-1 text-slate-700 dark:text-slate-300 hover:text-red-600 dark:hover:text-red-400 transition-colors underline underline-offset-2 ml-1 font-medium"
             title="Reset demo data and localStorage state"
           >
             <RotateCcw className="w-3 h-3" strokeWidth={1.5} />

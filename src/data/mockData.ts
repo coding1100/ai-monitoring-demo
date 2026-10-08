@@ -1153,7 +1153,7 @@ export const INITIAL_SOCIAL_POSTS: SocialPost[] = [
     id: 'post_02',
     workspace_id: 'halden',
     platform: 'instagram',
-    caption: 'Behind the clinical standard: precision laser protocols and seamless patient booking. Quality aesthetic care begins with disciplined practice operations.',
+    caption: 'Behind the clinical standard: precision laser protocols and direct patient booking. Quality aesthetic care begins with disciplined practice operations.',
     scheduledDate: '2026-03-30',
     scheduledTime: '14:30 EST',
     status: 'pending_approval',

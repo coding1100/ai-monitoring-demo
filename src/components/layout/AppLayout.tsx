@@ -21,7 +21,7 @@ export const AppLayout: React.FC = () => {
     <div className="relative min-h-screen flex flex-col antialiased">
       {/* Fixed static soft mesh in muted blue grey with warm grey and green grey blob */}
       <div
-        className={`bg-mesh ${darkMode ? 'bg-mesh-dark' : 'bg-mesh-light'}`}
+        className="bg-mesh"
         aria-hidden="true"
       />
 
